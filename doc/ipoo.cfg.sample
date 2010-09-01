@@ -1,0 +1,12 @@
+# -*- yaml -*-
+
+collector:
+  parallel: 4
+  routers:
+    router1.example.com: public
+    router2.example.com: public
+    router3.example.com: public
+  domains: ["example.com", "example.net"]
+web:
+  port: 8096
+  interface: 127.0.0.1
