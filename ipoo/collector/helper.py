@@ -39,6 +39,16 @@ def handleIP(user_function):
 
     return wrapper
 
+def requireCfg(user_function):
+    '''Modify handle to require a configuration item'''
+    @functools.wraps(user_function)
+    def wrapper(self, cfg, query):
+        if self.name not in cfg:
+            return False
+        return user_function(self, cfg, query)
+
+    return wrapper
+
 # Other helper functions
 def cache(maxtime=0, maxsize=100):
     '''

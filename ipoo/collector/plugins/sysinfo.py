@@ -4,6 +4,18 @@ Sysinfo plugin.
 Given an IP, return the list of names known for this IP. When not
 given an IP, return the list of IP known for this name. All
 informations are extracted from the sysinfo database.
+
+This plugin requires an URL to be queried in the configuration file::
+  collector:
+    sysinfo: http://example.com/sysinfo
+
+This returns a file with each line containing a tuple (canonical
+hostname, IP). For example::
+  hostname1.example.com 1.1.2.3
+  hostname1.example.com 1.1.2.4
+  hostname1.example.com 1.1.2.5
+  hostname2.example.com 1.2.2.5
+  hostname2.example.com 1.2.2.5
 """
 
 import socket
@@ -17,8 +29,6 @@ from zope.interface import implements
 from ipoo.collector.icollector import ICollector
 from ipoo.collector import helper
 
-SYSINFO_URL="http://sysinfo.oih.p.fti.net/data/host_ip.dat"
-
 class Sysinfo:
     """
     Collect data from sysinfo database about an IP or a name.
@@ -28,6 +38,7 @@ class Sysinfo:
     name = "sysinfo"
     description = "Data from sysinfo database"
 
+    @helper.requireCfg
     @helper.handleIP
     @helper.handleFQDN
     def handle(self, cfg, query):
@@ -36,7 +47,7 @@ class Sysinfo:
     @helper.cache(maxtime=120, maxsize=200)
     @defer.inlineCallbacks
     def process(self, cfg, query):
-        sysinfo = yield self.sysdb()
+        sysinfo = yield self.sysdb(cfg)
         try:
             query = socket.inet_ntoa(socket.inet_aton(query))
         except:
@@ -51,14 +62,14 @@ class Sysinfo:
 
     @helper.cache(maxtime=600)
     @defer.inlineCallbacks
-    def sysdb(self):
+    def sysdb(self, cfg):
         """
         Get sysinfo database.
 
         @return: a deferred list of (name, ip) tuples
         """
         results = []
-        sysinfo = yield client.getPage(SYSINFO_URL)
+        sysinfo = yield client.getPage(cfg[self.name])
         for line in sysinfo.split("\n"):
             line = line.split()
             if len(line) == 2:
