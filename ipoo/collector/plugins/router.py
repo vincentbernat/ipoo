@@ -45,6 +45,7 @@ class Router:
                                             'interface': interface})
         defer.returnValue(results)
                 
+    @helper.refresh(60)
     @helper.cache(maxtime=30, maxsize=1)
     def get_routes(self, cfg):
         """
@@ -81,7 +82,7 @@ class Router:
         d.addCallback(lambda x: results)
         return d
 
-    @helper.cache(maxtime=600, maxsize=1000)
+    @helper.cache(maxtime=6000, maxsize=1000)
     @defer.inlineCallbacks
     def get_routes_router(self, cfg, router):
         results = []

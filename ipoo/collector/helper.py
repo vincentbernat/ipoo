@@ -11,6 +11,7 @@ import cPickle
 
 from twisted.python import failure
 from twisted.internet.defer import Deferred
+from twisted.internet import task
 
 # Helper functions for handle (from ICollector)
 HOSTREGEX = re.compile(r'^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*\.?$')
@@ -50,6 +51,34 @@ def requireCfg(user_function):
     return wrapper
 
 # Other helper functions
+def refresh(period):
+    '''
+    Recall the function periodically.
+
+    After the decorated function has been called once, it will be
+    called again with the same arguments every `period' seconds. Only
+    one periodic call is handled per function. If a function is called
+    with different arguments, only the last call will be repeated.
+
+    @param period: how many seconds between two calls
+    '''
+    def decorating_function(user_function):
+        d = [] # Deferred is enclosed into a list to be able to keep a
+               # reference into the wrapper.
+
+        @functools.wraps(user_function)
+        def wrapper(*args, **kwds):
+            while d:
+                d.pop().stop()
+            result = user_function(*args, **kwds)
+            l = task.LoopingCall(lambda: user_function(*args, **kwds))
+            l.start(period, now=False)
+            d.append(l)
+            return result
+
+        return wrapper
+    return decorating_function
+
 def cache(maxtime=0, maxsize=100):
     '''
     Least-recently-used cache decorator with time constraints.
