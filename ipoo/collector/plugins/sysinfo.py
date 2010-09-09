@@ -53,11 +53,11 @@ class Sysinfo:
         except:
             # Not an IP
             result = dict([(ip, 1) for name, ip in sysinfo if name == query]).keys()
-            result.sort()
+            result.sort(key=lambda x: struct.unpack("!L", socket.inet_aton(x))[0])
         else:
             # An IP
             result = dict([(name, 1) for name, ip in sysinfo if ip == query]).keys()
-            result.sort(key=lambda x: struct.unpack("!L", socket.inet_aton(x))[0])
+            result.sort()
         defer.returnValue(result)
 
     @helper.cache(maxtime=600)
