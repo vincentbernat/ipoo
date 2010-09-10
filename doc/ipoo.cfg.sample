@@ -10,3 +10,5 @@ collector:
 web:
   port: 8096
   interface: 127.0.0.1
+  included: [ "http://example.com/app1/*", "http://example.com/app2/*" ]
+  examples: [ "127.0.0.1", "host1.example.com" ]

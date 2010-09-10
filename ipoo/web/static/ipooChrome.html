@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>IPoo panel</title>
+    <style type="text/css">
+/* General layout */
+
+html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.ipooBody {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Lucida Grande, Tahoma, sans-serif;
+    font-size: 11px;
+    background: #fff;
+    height: 100%;
+    width: 100%;
+}
+
+#ipooChrome {
+    font-family: Lucida Grande, Tahoma, sans-serif;
+    font-size: 11px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: url(ipoo.png) no-repeat 40px 20px;
+    border-collapse: collapse;
+    overflow: hidden;
+    border-top: dotted 1px #666;
+}
+
+/* Minichrome */
+
+#ipooMiniChrome {
+    display: none;
+    right: 0;
+    height: 27px;
+    background-color: #f1f2ee;
+    margin-left: 1px;
+    border-left: 1px solid #aca899;
+    border-top: 1px solid #aca899;
+}
+
+#ipooMiniContent {
+    display: block;
+    position: relative;
+    left: -1px;
+    right: 0;
+    top: 1px;
+    height: 25px;
+}
+
+#ipooMiniIcon {
+    float: right;
+    margin: 3px 3px;
+    height: 20px;
+    width: 20px;
+    float: right;    
+    background: url(ipoo-round.png) no-repeat center;
+    cursor: pointer;
+}
+
+/* Command line */
+
+#ipooCommand {
+    height: 18px;
+}
+
+#ipooCommandBox {
+    position: fixed;
+    width: 100%;
+    height: 18px;
+    bottom: 0;
+    overflow: hidden;
+    z-index: 9;
+    background: #fff;
+    border: 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px dotted #666;
+}
+
+#ipooCommandIcon {
+    position: absolute;
+    color: #00f;
+    top: 2px;
+    left: 6px;
+    display: inline;
+    font: 11px Monaco, monospace;
+    z-index: 10;
+}
+
+#ipooCommandLine {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    border: 0;
+    margin: 0;
+    padding: 2px 0 2px 32px;
+    font: 11px Monaco, monospace;
+    z-index: 9;
+    outline: none;
+}
+
+/* Button area */
+
+#ipooButtonArea {
+    margin: 0;
+    width: 24px;
+    background: #999;
+    vertical-align: top;
+}
+
+#ipooButtonMinimize {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url(ipoo-round.png) no-repeat center;
+    cursor: pointer;
+}
+
+#ipooButtonUpDown {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: url(updown.png) no-repeat center;
+    cursor: pointer;
+}
+
+/* Sub panels */
+
+#ipooDisplayArea {
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+.ipooSubPanel {
+    float: right;
+    display: block;
+    padding: 0.4em;
+    border: dashed 1px #666;
+    background: #fff;
+    opacity: 0.9;
+    font-size: smaller;
+    overflow: auto;
+}
+
+.ipooSubPanel .working {
+    display: inline-block;
+    background: url(loading.gif) no-repeat center;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    padding: 0;
+}
+
+.ipooSubPanel .empty {
+    display: inline-block;
+    background: url(empty.png) no-repeat center;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    padding: 0;
+    vertical-align: bottom;
+}
+
+.ipooSubPanel h1 {
+    font: italic bold 110% sans-serif;
+    margin-left: 1em;
+    margin-right: 0.5em;
+    border-bottom: dotted 1px blue;
+}
+
+.ipooSubPanel h2:before {
+    display: block;
+    content: '\A';
+    height: 0px;
+}
+
+.ipooSubPanel h2 {
+    display: inline;
+    font: bold 100% sans-serif;
+    margin: 0; padding: 0;
+}
+
+.ipooSubPanel .error {
+    color: red;
+    padding: 1px 1em 1px 20px;
+    margin-left: 2em;
+    min-height: 14px;
+    background: url(warning.png) no-repeat 1px center;
+}
+
+.ipooSubPanel .info {
+    color: blue;
+    padding: 0px 1em 0px 20px;
+    margin-left: 2em;
+    min-height: 14px;
+    background: url(info.png) no-repeat 1px center;
+}
+
+.ipooSubPanel ul, .ipooSubPanel table {
+    margin: 0px 2px 0px 2px;
+    padding-left: 2px;
+    border-left: solid 1px #666;
+}
+
+.ipooSubPanel ul li {
+    display: inline;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-right: 8px;
+    background: url(bullet.png) no-repeat right center;
+}
+
+.ipooSubPanel table tr td:first-child {
+    font-style: italic;
+}
+.ipooSubPanel table tr td:first-child:after {
+    content: ": ";
+}
+
+    </style>
+  </head>
+  <body class="ipooBody">
+    <table id="ipooChrome" cellpadding="0" cellspacing="0" border="0">
+      <tbody>
+	<tr style="height: 100%; margin: 0">
+	  <!-- Button area -->
+	  <td id="ipooButtonArea">
+	    <span id="ipooButtonMinimize">&nbsp;</span>
+	    <span id="ipooButtonUpDown">&nbsp;</span>
+	  </td>
+	  <!-- Display area -->
+	  <td id="ipooDisplayArea">
+	  </td>
+	</tr>
+	<!-- Command line -->
+	<tr><td id="ipooCommand" colspan="2">
+	  <div id="ipooCommandBox">
+	    <div id="ipooCommandIcon">&gt;&gt;&gt;</div>
+	    <input id="ipooCommandLine" name="ipooCommandLine" type="text" />
+	  </div>
+	</td></tr>
+	
+      </tbody>
+    </table> 
+    <span id="ipooMiniChrome">
+      <span id="ipooMiniContent">
+	<span id="ipooMiniIcon" title="Open IPoo" />
+      </span>
+    </span>
+  </body>
+</html>

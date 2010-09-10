@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+    xmlns:n="http://nevow.com/ns/nevow/0.1">
+  <head>
+    <title>IPoo</title>
+    <link rel="stylesheet" type="text/css" href="static/ipoo.css" />
+    <link rel="shortcut icon" href="static/ipoo-round.png" />
+    <script type="text/javascript" src="static/ipoo.js" />
+    <script type="text/javascript">
+      ipoo.setup();
+    </script>
+  </head>
+  <body>
+    <!-- Logo -->
+    <div id="logo">
+      <img src="static/ipoo.png" alt="IPoo" />
+    </div>
+
+    <div id="header">
+      <h1>Welcome to IPoo server</h1>
+
+      <!-- How to use and demo -->
+
+      <p>There are two ways to use IPoo:</p>
+      <ol>
+	<li><p>Using this page,</p></li>
+	<li><p>Using the Greasemonkey script.</p></li>
+      </ol>
+
+    </div>
+
+    <div id="column1">
+      <h2>Using this page</h2>
+
+      <p>On the bottom of this page, you can find the IPoo icon (« <img
+      src="static/ipoo-round.png" alt="IPoo" /> »). Clicking
+      on this icon will display IPoo panel. This panel contains an
+      area where you can put an IP address or a hostname. IPoo will
+      display any results it knows about.
+      </p>
+      
+      <n:invisible n:render="restrictdomains">
+	<p>Not all domains are accepted. This IPoo server accepts the
+	following domains:</p>
+	<ul n:render="domains" />
+      </n:invisible>
+
+      <p>The panel will hide the text that is below it. You can either
+      hide the panel using the « <img src="static/ipoo-round.png"
+      alt="Hide" /> » icon in the upper left corner or toggle the
+      position of the panel, either at the top of the page or at the
+      bottom using the « <img src="static/updown.png"
+      alt="Move" /> » icon.
+      </p>
+    </div>
+
+    <div id="column2">
+      <h2>Using the Greasemonkey script</h2>
+
+      <p>Greasemonkey is a Firefox add-on that allows to execute a script
+      to modify a given set of pages. IPoo provides a Greasemonkey
+      script allowing to get information for IP and hostnames
+      displayed on a web page.</p>
+
+      <h3>Installation</h3>
+
+      <p>To install IPoo, follow those steps:</p>
+
+      <form method="get" action="ipoo.user.js">
+
+	<ol>
+	  <li><p>Install
+	  <a href="http://www.getfirefox.net/">Mozilla Firefox</a> web
+	  browser.</p></li>
+
+	  <li><p>Install
+	  <a href="https://addons.mozilla.org/fr/firefox/addon/748/">
+	  Greasemonkey add-on for Firefox</a>.</p></li>
+
+	  <li><p>Eventually, modify the list of the sites IPoo will be
+	  available: <br />
+	  <textarea name="included" cols="40" rows="6" n:render="included" />
+	  </p></li>
+
+	  <li><p>Request your custom version of IPoo Greasemonkey script:
+	  <input type="hidden" name="location" value="" />
+	  <button name="submit" type="submit"
+		  onclick="this.form.location.value = document.location.href; return true">
+	    <img src="static/ipoo-round.png" alt="IPoo"/>
+	    Get IPoo script for Greasemonkey
+	  </button>
+	  </p></li>
+
+	  <li><p>Install the Greasemonkey script.</p></li>
+	</ol>
+
+      </form>
+
+      <h3>Use</h3>
+
+      <p>When Greasemonkey is enabled and running on the current page,
+      you will see IPoo logo (« <img src="static/ipoo-round.png"
+      alt="IPoo" /> ») in the lower right corner of the web page. Clicking
+      on this icon will display IPoo interface. The interface is similar
+      to the one present in this page. It can be used in the same way.
+      </p>
+
+      <p>Additionally, each time an IP or a hostname is spotted on the
+      page, the IPoo icon is displayed on top of it. If you click this
+      icon, IPoo will open the panel and display the information about
+      this IP or this hostname as if you typed it directly in the
+      panel.</p>
+
+      <n:invisible n:render="showexamples">
+	<p>For example, you should see IPoo icon over the following
+	examples: <span n:render="examples" />. Clicking on the icon
+	will display the results in the panel present in this page.</p>
+      </n:invisible>
+    </div>
+
+  </body>
+</html>

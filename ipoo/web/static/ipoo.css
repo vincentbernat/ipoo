@@ -1,0 +1,91 @@
+body
+{
+    background-color: #efd7ca;
+}
+
+img
+{
+    vertical-align: bottom;
+}
+
+/* Header (logo + beginning text) */
+
+div#logo
+{
+    margin-right: 40px;
+    margin-left: 10px;
+    width: 100px;
+    float: left;
+}
+
+div#header
+{
+    margin-left: 160px;
+}
+
+/* Content (2 columns) */
+
+div#column1
+{
+    width: 40%;
+    float: left;
+    margin-top: 0px;
+    padding: 0px 3em 1em 5em;
+}
+
+div#column2
+{
+    width: 40%;
+    margin-left: 50%;
+    margin-top: 0px;
+    padding: 0px 5em 1em 3em;
+    border-left: 1px dotted #666;
+}
+
+h1
+{
+    color: #ffbf00;
+    background: #666;
+    padding-left: 0.8em;
+}
+
+h2
+{
+    color: #ffbf00;
+    background: #666;
+    padding: 3px 0px 3px 2em;
+    font: italic bold 130% sans-serif;
+}
+
+h3
+{
+    color: #ffbf00;
+    background: #666;
+    padding: 3px 0px 3px 1em;
+    margin: 1em 5em 1em 2em;
+    font: bold 100% sans-serif;    
+}
+
+/* Ordered lists */
+ol
+{
+    font: italic bold 120% sans-serif;
+    color: #ffbf00;
+    background: #888;
+    margin: 0px auto;
+    padding: 3px;
+}
+
+ol p
+{
+    font: normal 83% sans-serif;
+    color: #000000;
+    margin: 0px;
+    padding: 3px 0px;
+}
+
+ol li {
+    background: #ffffff;
+    margin-left: 40px;
+    padding-left: 10px;
+}
