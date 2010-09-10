@@ -182,8 +182,10 @@ var ipoo = function () {
         );
 
         function lquery(event) {
+	    var q = this.alt || this.title;
             chrome.panel.show();
-            query(this.alt || this.title);
+	    chrome.commandline.history.save(q);
+            query(q);
 	    event.preventDefault();
 	    return false;
         }
@@ -564,46 +566,64 @@ var ipoo = function () {
             }()
         };
 
-        chrome.commandline = {
+        chrome.commandline = function() {
+	    var commandline = {};
+	    /* Function to handle history. */
+	    commandline.history = function() {
+		var history = [];
+		var position = -1;
+		return {
+		    save: function(value) {
+			value = value || cmdline.value;
+			position = history.length;
+                        history[position++] = value;
+		    },
+		    prev: function() {
+                        if (position > 0) {
+                            cmdline.value = history[--position];
+                        }
+		    },
+		    next: function() {
+                        if (position < history.length - 1) {
+                            cmdline.value = history[++position];
+                        } else if (position === history.length - 1) {
+                            position++;
+                            cmdline.value = "";
+                        }
+		    }
+		};
+	    }();
+
             /**
              * Function to handle a keypress in the command line. This
              * function should be called with the event that triggered
              * it.
              */
-            keypress: function () {
-                /* We handle an history */
-                var history = [];
-                var position = -1;
+            commandline.keypress = function () {
                 return function (event) {
                     var code = event.keyCode;
                     if (code === 13 /* enter */) {
                         if (cmdline.value) {
-                            position = history.length;
-                            history[position++] = cmdline.value;
+			    commandline.history.save();
                             query(cmdline.value);
                         }
                         cmdline.value = "";
                     } else if (code === 27 /* esc */) {
                         cmdline.value = "";
                     } else if (code === 38 /* up */) {
-                        if (position > 0) {
-                            cmdline.value = history[--position];
-                        }
+			commandline.history.prev();
                     } else if (code === 40 /* down */) {
-                        if (position < history.length - 1) {
-                            cmdline.value = history[++position];
-                        } else if (position === history.length - 1) {
-                            position++;
-                            cmdline.value = "";                 
-                        }
+			commandline.history.next();
                     } else {
                         return;
                     }
                     event.preventDefault();
                     return false;
                 };
-            }()
-        };
+            }();
+
+	    return commandline;
+        }();
 
         return chrome;
     }();
