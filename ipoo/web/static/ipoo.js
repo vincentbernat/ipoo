@@ -116,7 +116,7 @@ var ipoo = function () {
     var query = function (query)
     {
         var panel;
-        query.replace('\u200b', '');
+        query = query.replace(/\u200b/g, '');
         fbconsole.info("ipoo: Process query " + query);
 
         panel = chrome.panel.subpanel();
@@ -173,7 +173,7 @@ var ipoo = function () {
     {
         var notInTags = ['head', 'noscript', 'option', 'script', 'style', 'title', 'textarea'];
         // m[1] is IP address, m[2] is hostname
-        var regex = /(?:\b|\/)(?:((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.\u200b?)+(?:[A-Za-z]|[A-Za-z][A-Za-z0-9\-]*[A-Za-z0-9])))(?:\b|\/)/g;
+        var regex = /(?:\b|\/)(?:((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?))|((?:(?:[a-zA-Z0-9]|[a-zA-Z0-9][\u200ba-zA-Z0-9\-]*[a-zA-Z0-9])\u200b?\.\u200b?)+(?:[A-Za-z]|[A-Za-z][\u200bA-Za-z0-9\-]*[A-Za-z0-9])))(?:\b|\/|\u200b)/g;
 
         var xpathResult = document.evaluate(
             ".//text()[not(ancestor::*[@class='" + ipoo.config.id + "']) and " +
@@ -207,7 +207,7 @@ var ipoo = function () {
                     if (ipoo.config.domains) {
                         found = false;
                         for (i = 0; i < ipoo.config.domains.length && !found; i++) {
-                            s = m[2].replace('\u200b', '');
+                            s = m[2].replace(/\u200b/g, '');
                             s = s.substring(s.length - ipoo.config.domains[i].length - 1).toUpperCase();
                             if (s === "." + ipoo.config.domains[i].toUpperCase()) {
                                 found = true;
