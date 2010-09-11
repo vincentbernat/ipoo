@@ -33,11 +33,19 @@
     <div id="column1">
       <h2>Using this page</h2>
 
-      <p>On the bottom of this page, you can find the IPoo icon (« <img
-      src="static/ipoo-round.png" alt="IPoo" /> »). Clicking
+      <p>On the bottom of this page, you can find the IPoo icon
+      (« <img src="static/ipoo-round.png" alt="IPoo" /> »). Clicking
       on this icon will display IPoo panel. This panel contains an
-      area where you can put an IP address or a hostname. IPoo will
-      display any results it knows about.
+      input area on the bottom where you can put an IP address or a
+      hostname. IPoo will display any results it knows about.
+      </p>
+
+      <p>Each time a new query is done, older results are moved to the
+      left and the new result is displayed on the right of the
+      panel. Older results are deleted if there is no more room
+      left. The input area comes with an history that can be used to
+      callback older results. Up and down arrow keys allow to navigate
+      into it.
       </p>
       
       <n:invisible n:render="restrictdomains">
