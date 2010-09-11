@@ -10,8 +10,7 @@ import re
 import cPickle
 
 from twisted.python import failure
-from twisted.internet.defer import Deferred
-from twisted.internet import task
+from twisted.internet import task, defer
 
 # Helper functions for handle (from ICollector)
 HOSTREGEX = re.compile(r'^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*\.?$')
@@ -79,6 +78,39 @@ def refresh(period):
         return wrapper
     return decorating_function
 
+class CachedDeferred(object):
+    '''
+    A way to let objects wait for the same deferred. The first one
+    create an instance of this class and the other one will register
+    themselves. This is better than just adding callback to the
+    deferrer since we ensure that its result is not altered by other
+    users.
+    '''
+
+    def __init__(self, deferred):
+        self.deferreds = []
+        self.called = False
+        self.result = None
+        deferred.addBoth(self._callback)
+
+    def _callback(self, result):
+        # Our deferred has been trigerred
+        self.called = True
+        self.result = result
+        while self.deferreds:
+            d = self.deferreds.pop()
+            if isinstance(result, failure.Failure):
+                d.errback(result)
+            else:
+                d.callback(result)
+
+    def register(self):
+        if self.called:
+            return self.result
+        d = defer.Deferred()
+        self.deferreds.append(d)
+        return d
+
 def cache(maxtime=0, maxsize=100):
     '''
     Least-recently-used cache decorator with time constraints.
@@ -111,6 +143,10 @@ def cache(maxtime=0, maxsize=100):
                     del cache[key], lastaccess[key], creation[key]
                     raise KeyError
                 result = cache[key]
+                # If we the cached data comes from a deferred, we need
+                # to register for it.
+                if isinstance(result, CachedDeferred):
+                    result = result.register()
                 lastaccess[key] = t
             except KeyError:
                 result = user_function(*args, **kwds)
@@ -119,8 +155,11 @@ def cache(maxtime=0, maxsize=100):
                 creation[key] = t
                 # If the result is a deferred, we need to remember its
                 # result when it will fire
-                if isinstance(result, Deferred):
+                if isinstance(result, defer.Deferred):
                     result.addBoth(remember, key)
+                    result = CachedDeferred(result)
+                    cache[key] = result
+                    result = result.register()
 
                 # purge least recently used cache entry, not really
                 # performance oriented
@@ -141,8 +180,8 @@ def cache(maxtime=0, maxsize=100):
                     # Maybe the key has already expired
                     pass
             else:
-                # Cache the result directly, the deferred value could
-                # change otherwise
+                # Cache the result directly. We don't need the
+                # deferred anymore.
                 cache[key] = x
             return x
 

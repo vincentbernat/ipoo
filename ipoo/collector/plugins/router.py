@@ -57,7 +57,7 @@ class Router:
         def doWork():
             for router in routers:
                 log.msg("browsing %s routes" % router)
-                d = defer.maybeDeferred(self.get_routes_router(cfg, router))
+                d = defer.maybeDeferred(self.get_routes_router, cfg, router)
                 # Try harder
                 d.addErrback(lambda x, router:
                                  self.get_routes_router(cfg, router),
