@@ -187,6 +187,7 @@ var ipoo = function () {
 	    chrome.commandline.history.save(q);
             query(q);
 	    event.preventDefault();
+	    event.stopPropagation();
 	    return false;
         }
 
