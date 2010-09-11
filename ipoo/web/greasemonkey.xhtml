@@ -1,23 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"
+    xmlns:n="http://nevow.com/ns/nevow/0.1">
   <head>
     <title>IPoo Greasemonkey user script</title>
-    <link rel="stylesheet" type="text/css" href="static/ipoo.css" />
-    <link rel="shortcut icon" href="static/ipoo-round.png" />
+    <link rel="stylesheet" type="text/css" href="../static/ipoo.css" />
+    <link rel="shortcut icon" href="../static/ipoo-round.png" />
   </head>
   <body onload="try {
 		   document.location.href = document.getElementById('follow').href;
                    return true;
                 } catch (e) { return true; }">
     <div id="logo">
-      <img src="static/ipoo.png" alt="IPoo" />
+      <img src="../static/ipoo.png" alt="IPoo" />
     </div>
 
     <div id="header">
       <h1>IPoo Greasemonkey user script</h1>
 
-      <p>Your IPoo Greasemonkey script is <a id="follow"
+      <p n:render="save">Your IPoo Greasemonkey script is <a id="follow"
       href="ipoo.user.js">available</a>.</p>
     </div>
   </body>

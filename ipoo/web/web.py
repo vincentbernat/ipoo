@@ -3,11 +3,11 @@ Web service main module
 """
 
 from twisted.python import util
-from nevow import rend, appserver, loaders, page, static
+from nevow import rend, appserver, loaders, page, static, inevow
 from nevow import tags as T
 
 from ipoo.web.api import ApiResource
-from ipoo.web.greasemonkey import UserJs
+from ipoo.web.greasemonkey import RequestUserJs
 
 class MainPage(rend.Page):
 
@@ -18,14 +18,24 @@ class MainPage(rend.Page):
         self.collector = collector
         rend.Page.__init__(self)
 
+    # Children
+
     def child_api(self, ctx):
+        # The API can be used with XSS. The web client is a regular client for us.
+        inevow.IRequest(ctx).setHeader("Access-Control-Allow-Origin",
+                                       "*")
         return ApiResource(self.config, self.collector)
 
     def child_static(self, ctx):
+        # The web client will try to fetch some static files
+        inevow.IRequest(ctx).setHeader("Access-Control-Allow-Origin",
+                                       "*")
         return static.File(util.sibpath(__file__, "static"))
 
-    def child_userjs(self, ctx):
-        return UserJs(self.config)
+    def child_greasemonkey(self, ctx):
+        return RequestUserJs(self.config)
+
+    # Main page rendering
 
     def render_included(self, ctx, data):
         return ctx.tag["\n".join(self.config.get("included",["http://*"]))]
@@ -45,5 +55,3 @@ class MainPage(rend.Page):
 
     def render_examples(self, ctx, data):
         return ", ".join(self.config['examples'])
-
-setattr(MainPage, "child_ipoo.user.js", MainPage.child_userjs)
