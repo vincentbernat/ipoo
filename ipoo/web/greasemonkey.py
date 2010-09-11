@@ -2,7 +2,8 @@
 Greasemonkey related stuff
 """
 
-from nevow import rend, inevow
+from twisted.python import util
+from nevow import rend, inevow, static
 
 class UserJs(rend.Page):
     """Return a ipoo.user.js greasemonkey script to the user."""
@@ -15,13 +16,12 @@ class UserJs(rend.Page):
         session = inevow.ISession(ctx)
         request = inevow.IRequest(ctx)
         # If we have arguments, we remember them in a session and
-        # reload the page
+        # provide a redirect page
         if 'included' in request.args and 'location' in request.args:
             session.included = request.args['included'][0]
             session.location = request.args['location'][0]
-            request.redirect(request.path)
-            return ''
-        # Without arguments, we build the script
+            return static.File(util.sibpath(__file__, "static/redirect.html"))
+        # Without arguments, we provide the script using cookies
         answer = """// IPoo Greasemonkey script
 
 // ==UserScript==
