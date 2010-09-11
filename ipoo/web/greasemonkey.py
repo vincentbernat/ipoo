@@ -2,6 +2,8 @@
 Greasemonkey related stuff
 """
 
+import base64
+
 from twisted.python import util
 from nevow import rend, inevow, static, loaders
 
@@ -45,23 +47,31 @@ class UserJs(rend.Page):
     def renderHTTP(self, ctx):
         session = inevow.ISession(ctx)
         request = inevow.IRequest(ctx)
+        ipoojs = file(util.sibpath(__file__,
+                                   "static/ipoo.js")).read()
+        icon = base64.b64encode(file(
+                util.sibpath(__file__,
+                             "static/ipoo-round.png")).read())
         answer = """// IPoo Greasemonkey script
 
 // ==UserScript==
 // @name           IPoo
 // @namespace      http://www.luffy.cx/
 // @description    Interface to IPoo web service
-// @require        %(service)sstatic/ipoo.js
-// @resource  icon %(service)sstatic/ipoo-round.png
 %(included)s
 // ==/UserScript==
 
 // Don't run on iframes
 if(top != self) return;
 
+// ipoo.js (begin)
+%(ipoojs)s
+// ipoo.js (end)
+
 console.info("Running IPoo for " + document.location.href);
 ipoo.config.ws = "%(service)s";
-ipoo.config.icon = GM_getResourceURL("icon");
+ipoo.config.icon = "data:image/png;base64,%(icon)s";
+ipoo.config.greasemonkey = true;
 
 ipoo.setup();
 
@@ -69,7 +79,9 @@ ipoo.setup();
         answer = answer % {'included': "\n".join(["// @include        %s" % x
                                                   for x
                                                   in session.included.split("\n")]),
-                           'service': session.location
+                           'service': session.location,
+                           'ipoojs': ipoojs,
+                           'icon': icon
                            }
         request.setHeader("content-type",  "text/javascript; charset=utf-8")
         request.setHeader("content-length", len(answer))

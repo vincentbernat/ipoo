@@ -15,7 +15,8 @@ var ipoo = function () {
         skin: "static/ipooChrome.html",
         height: 250,            // Panel height
         width: "35em",          // Width of one subpanel
-        id: "IPooUI"
+        id: "IPooUI",
+	greasemonkey: false	// Run from greasemonkey?
     };
 
     /******************************************************
@@ -324,7 +325,11 @@ var ipoo = function () {
                     called = true;
                     getText(ipoo.config.skin, function (html) {
                         // We retrieve the HTML content and put it into the iframe
-                        idoc = iframe.contentWindow.document;
+			if (iframe.contentWindow) {
+			    idoc = iframe.contentWindow.document;
+			} else { // Google Chrome
+			    idoc = iframe.contentDocument;
+			}
                         idoc.open();
                         // We alter the CSS to point to the appropriate ressources
                         idoc.write(html.replace(/\burl\(/g,
@@ -649,7 +654,7 @@ var ipoo = function () {
     ipoo.setup = function ()
     {
         // We need both domains and DOM to be able to build the interface
-        var isDomReady = false;
+        var isDomReady = ipoo.config.greasemonkey;
         var hasDomains = false;
         var called = false;
         if ('text/xml' === document.contentType ||
@@ -668,10 +673,12 @@ var ipoo = function () {
             called = true;
             chrome.init();
             linkify(document, document);
-            document.body.addEventListener('DOMNodeInserted',
-                                           function (event) {
-                                               linkify(event.target, document);
-                                           }, false);
+            if (!isDomReady) {
+		document.body.addEventListener('DOMNodeInserted',
+                                               function (event) {
+						   linkify(event.target, document);
+                                               }, false);
+	    }
         }
         // Helper called when we got domains.
         function gotDomains(domains)
