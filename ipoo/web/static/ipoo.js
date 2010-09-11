@@ -33,8 +33,8 @@ var ipoo = function () {
         
         function callFirebugConsole(f) {
             return function () {
-                if (typeof console !== "undefined" && console.firebug) {
-                    return console[f].apply(null, arguments);
+                if (typeof console !== "undefined" && console.log) {
+                    return console[f].apply(console, arguments);
                 }
             };
         }
@@ -253,7 +253,10 @@ var ipoo = function () {
             }
             if (span) {
                 // Add the remaining text
-                span.appendChild(document.createTextNode(txt.substring(p, txt.length)));
+		if (p < txt.length) {
+                    span.appendChild(document.createTextNode(
+			txt.substring(p, txt.length)));
+		}
                 try {
                     node.parentNode.replaceChild(span, node);
                 } catch (e) {
@@ -304,7 +307,6 @@ var ipoo = function () {
         {
             // Create an iframe and put the appropriate content in it
             iframe = document.createElement("iframe");
-            iframe.setAttribute('src', 'about:blank');
             iframe.setAttribute('frameBorder', 0);
             iframe.setAttribute('class', ipoo.config.id);
             iframe.style.border = 0;
@@ -313,7 +315,6 @@ var ipoo = function () {
             iframe.style.bottom = "0";
             iframe.style.display = "none";
             iframe.style.visibility = "hidden";
-            document.body.appendChild(iframe);
             iframe.addEventListener("load", function () {
                 var called = false;
                 return function () {
@@ -365,6 +366,8 @@ var ipoo = function () {
                     return false;
                 };
             }(), false);
+            iframe.setAttribute('src', 'about:blank');
+            document.body.appendChild(iframe);
         };
 
         /**
@@ -485,7 +488,7 @@ var ipoo = function () {
                             append("p", "info", message);
                         },
                         section: function (name) {
-                            append("h2", null, name + ":");
+                            append("h2", null, name + ":\u200b");
                         },
                         pretty: function (data) {
                             // We have an arbitrary object and we need
@@ -537,7 +540,7 @@ var ipoo = function () {
                                 }
                                 if (typeof data === 'string' ||
                                     typeof data === 'number') {
-                                    return idoc.createTextNode(data+"\u200b");
+                                    return idoc.createTextNode(data+" ");
                                 }
                                 /* null, undefined */
                                 return empty();
