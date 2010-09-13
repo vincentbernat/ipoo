@@ -13,9 +13,10 @@ class MainPage(rend.Page):
 
     docFactory = loaders.xmlfile(util.sibpath(__file__, "main.xhtml"))
 
-    def __init__(self, config, collector):
+    def __init__(self, config, collector, xmpp):
         self.config = config
         self.collector = collector
+        self.xmpp = xmpp
         rend.Page.__init__(self)
 
     # Children
@@ -55,3 +56,28 @@ class MainPage(rend.Page):
 
     def render_examples(self, ctx, data):
         return ", ".join(self.config['examples'])
+
+    def render_xmppenabled(self, ctx, data):
+        if self.xmpp is not None:
+            return ctx.tag
+        return ""
+
+    def render_xmppjid(self, ctx, data):
+        if self.xmpp is not None:
+            return ctx.tag(href="xmpp:%s" % self.xmpp.config['login'])[
+                self.xmpp.config['login']]
+        return ""
+
+    def render_xmppprotected(self, ctx, data):
+        if self.xmpp is not None:
+            password = self.xmpp.getPassword()
+            if password:
+                return ctx.tag
+        return ""
+
+    def render_xmpppassword(self, ctx, data):
+        if self.xmpp:
+            password = self.xmpp.getPassword()
+            if password:
+                return ctx.tag[password]
+        return ""

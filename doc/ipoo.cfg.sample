@@ -18,3 +18,4 @@ web:
 xmpp:
   login: ipoo@jabber.example.com
   password: password
+  protected: yes

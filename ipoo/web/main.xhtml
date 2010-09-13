@@ -22,9 +22,10 @@
 
       <!-- How to use and demo -->
 
-      <p>There are two ways to use IPoo:</p>
+      <p>There are several ways to use IPoo:</p>
       <ol>
 	<li><p>Using this page,</p></li>
+	<li n:render="xmppenabled"><p>Using Jabber,</p></li>
 	<li><p>Using the Greasemonkey script.</p></li>
       </ol>
 
@@ -61,6 +62,23 @@
       bottom using the « <img src="static/updown.png"
       alt="Move" /> » icon.
       </p>
+
+      <n:invisible n:render="xmppenabled">
+	<h2>Using Jabber</h2>
+
+	<p>You can ask IPoo for information directly using Jabber. Its
+	JID is <a n:render="xmppjid" />. You need a Jabber
+	client. Look at <a href="http://www.jabber.org/">Jabber.org
+	website</a> for any information on this.</p>
+
+	<p n:render="xmppprotected">This feature is password
+	protected. Before accepting to talk to you, IPoo will ask for
+	a password. This password is changed hourly. Currently, this
+	is:</p>
+	<div n:render="xmpppassword" style="font-family: monospace;
+					    font-size: xx-small;
+					    text-align: center;" />
+      </n:invisible>
     </div>
 
     <div id="column2">
