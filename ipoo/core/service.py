@@ -11,6 +11,7 @@ from nevow import appserver
 
 from ipoo.collector.service import CollectorService
 from ipoo.web.web import MainPage
+from ipoo.xmpp.service import XmppService
 
 def makeService(config):
     configfile = yaml.load(file(config['config'], 'rb').read())
@@ -26,5 +27,11 @@ def makeService(config):
                              appserver.NevowSite(MainPage(webconfig, collector)),
                              interface=webconfig.get('interface', '127.0.0.1'))
     web.setServiceParent(application)
+
+    # XMPP
+    xmppconfig = configfile.get('xmpp', {})
+    if xmppconfig:
+        xmpp = XmppService(xmppconfig, collector)
+        xmpp.setServiceParent(application)
 
     return application

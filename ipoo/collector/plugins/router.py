@@ -25,7 +25,7 @@ class Router:
     implements(ICollector, IPlugin)
 
     name = "router"
-    description = "Data from routers"
+    description = "data from routers"
 
     @helper.handleIP
     def handle(self, cfg, query):

@@ -36,7 +36,7 @@ class Sysinfo:
     implements(ICollector, IPlugin)
 
     name = "sysinfo"
-    description = "Data from sysinfo database"
+    description = "data from sysinfo database"
 
     @helper.requireCfg
     @helper.handleIP

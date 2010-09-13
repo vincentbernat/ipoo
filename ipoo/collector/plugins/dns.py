@@ -26,7 +26,7 @@ class Dns:
     implements(ICollector, IPlugin)
 
     name = "dns"
-    description = "Data from DNS"
+    description = "data from DNS"
 
     @helper.handleIP
     @helper.handleFQDN
