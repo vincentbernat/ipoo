@@ -28,16 +28,7 @@ class Collector:
             if ip:
                 query = ip
             elif hostname:
-                # Check if the hostname ends with an authorized domain
-                hostname = hostname.replace(u"\u200b", "")
-                domains = self.collector.config.get('domains', None)
-                if domains is None:
-                    query = hostname
-                else:
-                    for domain in domains:
-                        if hostname.endswith(domain):
-                            query = hostname
-                            break
+                query = hostname.replace(u"\u200b", "")
             if query is not None:
                 plugins = self.collector.available(query)
                 for plugin in plugins:
