@@ -6,6 +6,7 @@ import base64
 
 from twisted.python import util
 from nevow import rend, inevow, static, loaders
+from nevow import tags as T
 
 class RequestUserJs(rend.Page):
     """
@@ -30,7 +31,7 @@ class RequestUserJs(rend.Page):
             session.included = request.args['included'][0]
             session.location = request.args['location'][0]
             return ctx.tag
-        return T.p("Get back at the main page to generate your user script.")
+        return T.p["Get back at the main page to generate your user script."]
 
     def child_userjs(self, ctx):
         return UserJs(self.config)
