@@ -673,12 +673,10 @@ var ipoo = function () {
             called = true;
             chrome.init();
             linkify(document, document);
-            if (!isDomReady) {
-		document.body.addEventListener('DOMNodeInserted',
-                                               function (event) {
-						   linkify(event.target, document);
-                                               }, false);
-	    }
+	    document.body.addEventListener('DOMNodeInserted',
+                                           function (event) {
+					       linkify(event.target, document);
+                                           }, false);
         }
         // Helper called when we got domains.
         function gotDomains(domains)
