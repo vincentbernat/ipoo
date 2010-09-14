@@ -39,6 +39,24 @@ def handleIP(user_function):
 
     return wrapper
 
+def handleNetwork(user_function):
+    '''Modify handle function to let say it also handles network'''
+    @functools.wraps(user_function)
+    def wrapper(self, cfg, query):
+        s = query.split("/")
+        if len(s) == 2:
+            net, mask = s
+            try:
+                socket.inet_aton(net)
+                mask = int(mask)
+                if mask >= 0 and mask <= 32:
+                    return True
+            except:
+                pass
+        return user_function(self, cfg, query)
+
+    return wrapper
+
 def requireCfg(user_function):
     '''Modify handle to require a configuration item'''
     @functools.wraps(user_function)
