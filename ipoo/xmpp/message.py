@@ -4,6 +4,8 @@ XMPP message module.
 Receive messages and handles them
 """
 
+import traceback
+
 from twisted.python import log
 from twisted.internet import defer
 from twisted.words.protocols.jabber.xmlstream import toResponse
@@ -13,6 +15,7 @@ from twisted.words.protocols.jabber.jid import JID
 
 from ipoo.xmpp.alice import Alice
 from ipoo.xmpp.collector import Collector
+from ipoo.xmpp import MixedMessage
 
 class MessageProtocol(xmppim.MessageProtocol):
 
@@ -48,8 +51,8 @@ class MessageProtocol(xmppim.MessageProtocol):
 
         # Tell the user we are building an answer
         response = toResponse(message, 'chat')
-        response.addElement('composing').attributes["xmlns"] = \
-            'http://jabber.org/protocol/chatstates'
+        response.addElement('composing',
+                            'http://jabber.org/protocol/chatstates')
         self.send(response)
 
         # Get an answer from the first one able to answer
@@ -59,7 +62,8 @@ class MessageProtocol(xmppim.MessageProtocol):
                 answers = yield bot.ask(message['from'],
                                         unicode(message.body).encode('ascii', 'ignore'))
             except Exception as e:
-                log.msg("Catch exception for bot %r: %s" % (bot, e))
+                log.msg("Catch exception for bot %r: %s\n%s" %
+                        (bot, e, traceback.format_exc()))
                 continue
             if answers:
                 break
@@ -68,5 +72,11 @@ class MessageProtocol(xmppim.MessageProtocol):
 
         for answer in answers:
             response = toResponse(message, message['type'])
-            response.addElement('body', content=unicode(answer))
+            if not isinstance(answer, MixedMessage):
+                response.addElement('body', content=unicode(answer))
+            else:
+                response.addElement('body', content=unicode(answer.plain))
+                response.addElement(
+                    'html',
+                    'http://jabber.org/protocol/xhtml-im').addChild(answer.html)
             yield self.send(response)
