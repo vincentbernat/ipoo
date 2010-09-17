@@ -15,7 +15,7 @@ else:
             ['config', 'c', '/etc/ipoo/ipoo.cfg'],
             ]
 
-    class QCssServiceMaker(object):
+    class IPooServiceMaker(object):
         implements(IServiceMaker, IPlugin)
 
         tapname = "ipoo"
@@ -25,4 +25,4 @@ else:
         def makeService(self, config):
             return service.makeService(config)
 
-    qcssServer = QCssServiceMaker()
+    ipooServer = IPooServiceMaker()
