@@ -28,8 +28,10 @@ if __name__ == "__main__":
             ],
           packages=["ipoo",
                     "ipoo.collector",
+                    "ipoo.collector.plugins",
                     "ipoo.core",
                     "ipoo.web",
+                    "ipoo.xmpp",
                     "twisted.plugins"],
           package_data={'twisted': ['plugins/ipoo_plugin.py']}
           )
