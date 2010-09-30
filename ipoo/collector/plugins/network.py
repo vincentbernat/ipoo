@@ -43,7 +43,7 @@ class Network:
                 result['nb'] = len(query) - 2
                 result['broadcast'] = str(query[-1])
                 result['max'] = str(query[-2])
-            result['min'] = str(query[0])
+            result['min'] = str(query[1])
         return result
 
 network = Network()
