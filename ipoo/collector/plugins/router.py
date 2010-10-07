@@ -85,6 +85,16 @@ class Router:
     @helper.cache(maxtime=6000, maxsize=1000)
     @defer.inlineCallbacks
     def get_routes_router(self, cfg, router):
+        """
+        Get routes from a router using IP-FORWARD-MIB::ipCidrRouteTable.
+
+        Alternatively, if the table is empty, use
+        RFC1213-MIB::ipRouteTable.
+
+        @param cfg: configuration
+        @param router: name of the router
+        @return: a deferred list of tuples (net, interface)
+        """
         results = []
         ip = yield client.getHostByName(router)
         proxy = AgentProxy(ip=ip, community=cfg['routers'][router])
@@ -92,7 +102,25 @@ class Router:
         base = '.1.3.6.1.2.1.4.24.4.1.5'
         # IP-FORWARD-MIB::ipCidrRouteIfIndex : route + netmask + gateway + interface
         routes = yield proxy.walk(base)
+        if not routes:
+            # We use RFC1213-MIB instead
+            base = '.1.3.6.1.2.1.4.21.1'
+            types = yield proxy.walk("%s.8" % base)
+            for oid in types:
+                if types[oid] != 3: # Not a direct route
+                    continue
+                ip = ".".join(oid.split(".")[-4:])
+                intoid = "%s.2.%s" % (base, ip)
+                maskoid = "%s.11.%s" % (base, ip)
+                info = yield proxy.get([intoid, maskoid])
+                interface, mask = info[intoid], info[maskoid]
+                if not interface:
+                    continue
+                results.append((IPNetwork("%s/%s" % (ip, mask)),
+                                interfaces.get(interface, "unknown")))
+            defer.returnValue(results)
         for oid in routes:
+            # We use IP-FORWARD-MIB
             # Only keep connected routes
             if not oid.endswith(".0.0.0.0"):
                 continue
