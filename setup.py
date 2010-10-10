@@ -33,5 +33,9 @@ if __name__ == "__main__":
                     "ipoo.web",
                     "ipoo.xmpp",
                     "twisted.plugins"],
-          package_data={'twisted': ['plugins/ipoo_plugin.py']}
+          package_data={'twisted': ['plugins/ipoo_plugin.py'],
+                        'ipoo.web': ["static/*.png", "static/*.gif",
+                                     "static/*.css", "static/*.js",
+                                     "static/ipooChrome.html",
+                                     "main.xhtml"],},
           )
