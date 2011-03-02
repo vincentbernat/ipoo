@@ -34,7 +34,7 @@ var ipoo = function () {
         
         function callFirebugConsole(f) {
             return function () {
-                if (typeof console !== "undefined" && console.log) {
+                if (typeof console !== "undefined" && console[f] && console[f].apply) {
                     return console[f].apply(console, arguments);
                 }
             };
