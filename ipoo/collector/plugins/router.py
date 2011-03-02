@@ -67,8 +67,9 @@ class Router:
                              router)
                 d.addCallbacks(lambda x, router: results.update({router: x}),
                                lambda e, router:
-                                   log.msg("unable to browse %s: %s" % (router,
-                                                                        e.getErrorMessage())),
+                                   log.msg("unable to browse %s: %s\n%s" % (router,
+                                                                            e.getErrorMessage(),
+                                                                            e.getTraceback())),
                                callbackArgs=(router,),
                                errbackArgs=(router,))
                 yield d
@@ -128,6 +129,13 @@ class Router:
             oid = oid.split(".")
             network = ".".join(oid[-13:-9])
             mask = ".".join(oid[-9:-5])
+            # F5 BigIP may reverse the mask...
+            if not IPAddress(mask).is_netmask():
+                mask = mask.split(".")
+                mask.reverse()
+                mask = ".".join(mask)
+                if not IPAddress(mask).is_netmask():
+                    continue
             results.append((IPNetwork("%s/%s" % (network, mask)),
                             interfaces.get(interface, "unknown")))
         defer.returnValue(results)
