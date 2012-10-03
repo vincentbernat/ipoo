@@ -39,7 +39,7 @@ class Sysinfo:
     description = "data from sysinfo database"
 
     @helper.requireCfg
-    @helper.handleIP
+    @helper.handleIPv4
     @helper.handleFQDN
     def handle(self, cfg, query):
         return False

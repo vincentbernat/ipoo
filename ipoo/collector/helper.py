@@ -25,8 +25,8 @@ def handleFQDN(user_function):
         return user_function(self, cfg, query)
 
     return wrapper
-            
-def handleIP(user_function):
+
+def handleIPv4(user_function):
     '''Modify handle function to let say that it also handles IP'''
     @functools.wraps(user_function)
     def wrapper(self, cfg, query):
@@ -35,7 +35,7 @@ def handleIP(user_function):
         except:
             return user_function(self, cfg, query)
         else:
-            return True
+            return False
 
     return wrapper
 

@@ -27,7 +27,7 @@ class Router:
     name = "router"
     description = "data from routers"
 
-    @helper.handleIP
+    @helper.handleIPv4
     def handle(self, cfg, query):
         return False
 

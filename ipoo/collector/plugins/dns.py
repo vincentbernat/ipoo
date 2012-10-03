@@ -28,7 +28,7 @@ class Dns:
     name = "dns"
     description = "data from DNS"
 
-    @helper.handleIP
+    @helper.handleIPv4
     @helper.handleFQDN
     def handle(self, cfg, query):
         return False
