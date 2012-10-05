@@ -53,6 +53,7 @@ class Sysinfo:
         except:
             # Not an IP
             result = dict([(ip, 1) for name, ip in sysinfo if name == query]).keys()
+            result = [x for x in result if ":" not in x]
             result.sort(key=lambda x: struct.unpack("!L", socket.inet_aton(x))[0])
         else:
             # An IP
