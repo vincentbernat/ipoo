@@ -35,7 +35,7 @@ def handleIPv4(user_function):
         except:
             return user_function(self, cfg, query)
         else:
-            return False
+            return True
 
     return wrapper
 
