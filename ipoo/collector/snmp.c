@@ -1020,7 +1020,6 @@ initsnmp(void)
 	PyObject *m, *exc;
 	char *name;
 	struct ErrorException *e;
-	netsnmp_log_handler *logh;
 
 	if (PyType_Ready(&SnmpType) < 0) return;
 	SnmpReaderType.tp_new = PyType_GenericNew;
@@ -1086,7 +1085,7 @@ initsnmp(void)
 	setenv("MIBDIRS", "/dev/null", 1);
 	/* Disable any logging */
 	snmp_disable_log();
-        logh = netsnmp_register_loghandler(NETSNMP_LOGHANDLER_NONE, LOG_DEBUG);
+	netsnmp_register_loghandler(NETSNMP_LOGHANDLER_NONE, LOG_DEBUG);
 	/* Init SNMP */
 	init_snmp("snmp");
 }
