@@ -25,6 +25,7 @@ To user this application, you need the following Debian packages:
  - python-twisted-core (Twisted - http://twistedmatrix.com)
  - python-twisted-names (Twisted Names - http://twistedmatrix.com)
  - python-twisted-words (Twisted Words - http://twistedmatrix.com)
+ - python-wokkel (Wokkel - https://wokkel.ik.nu/)
  - python-nevow (Nevow - http://divmod.org/trac/wiki/DivmodNevow)
  - python-netaddr (netaddr - https://github.com/drkjam/netaddr)
  - python-yaml (PyYAML - http://pyyaml.org/)
